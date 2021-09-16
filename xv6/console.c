@@ -43,6 +43,7 @@
 #define	inportb(P)		inb(P)
 #define	outportb(P,V)		outb(P,V)
 
+/* Modo Grafico */
 static unsigned char g_320x200x256[] =
 {
 // MISC
@@ -60,9 +61,10 @@ static unsigned char g_320x200x256[] =
 // AC
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
     0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
-    0x41, 0x00, 0x0F, 0x00,    0x00
+    0x41, 0x00, 0x0F, 0x00, 0x00
 };
 
+/* Modo Texto */
 static unsigned char g_80x25_text[] =
 {
 // MISC
@@ -409,6 +411,12 @@ selec_mode(int mode)
 {
   if(mode == 1){
     write_regs(g_320x200x256);
+
+    uchar *VGA = (uchar *) P2V(0xA0000);
+    for (uint i = 0; i < 320*200; i++){
+      VGA[i] = 0x11;
+    }
+
   }else if (mode == 0){
     write_regs(g_80x25_text);
   }
@@ -417,13 +425,14 @@ selec_mode(int mode)
 static void
 vgainit()
 {
-  selec_mode(1);
   *(int *)P2V(0xB8F94) = 0x0353;
   *(int *)P2V(0xB8F96) = 0x034F;
   *(int *)P2V(0xB8F98) = 0x0332;
   *(int *)P2V(0xB8F9A) = 0x0330;
   *(int *)P2V(0xB8F9C) = 0x0332;
   *(int *)P2V(0xB8F9E) = 0x0331;
+
+  selec_mode(1);
 }
 
 
