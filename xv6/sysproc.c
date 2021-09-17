@@ -89,3 +89,12 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+//tiene que ser parecidas a las anteriror (despues borrar comentario)
+int
+sys_modeswitch(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+  return selec_mode(n);
+}

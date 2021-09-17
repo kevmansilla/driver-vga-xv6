@@ -170,6 +170,10 @@ void            uartinit(void);
 void            uartintr(void);
 void            uartputc(int);
 
+// vga.c
+void            write_regs(unsigned char *regs);
+int             selec_mode(int mode);
+
 // vm.c
 void            seginit(void);
 void            kvmalloc(void);
