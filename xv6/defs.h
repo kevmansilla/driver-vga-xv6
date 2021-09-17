@@ -173,6 +173,7 @@ void            uartputc(int);
 // vga.c
 void            write_regs(unsigned char *regs);
 int             selec_mode(int mode);
+int             plotpixel(int x, int y, int color);
 
 // vm.c
 void            seginit(void);

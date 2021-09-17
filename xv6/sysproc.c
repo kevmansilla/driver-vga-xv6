@@ -98,3 +98,14 @@ sys_modeswitch(void)
     return -1;
   return selec_mode(n);
 }
+
+int
+sys_plotpixel(void)
+{
+  int a, b, c;
+  if(argint(0, &a) < 0 || argint(1, &b) < 0 || argint(2, &c) < 0)
+    return -1;
+  return plotpixel(a, b, c);
+
+
+}

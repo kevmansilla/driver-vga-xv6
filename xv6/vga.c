@@ -111,3 +111,12 @@ selec_mode(int mode)
   }
   return 0;
 }
+
+int
+plotpixel(int x, int y, int color)
+{
+  uchar *VGA = (uchar *)P2V(0xA0000);
+  int offset = 320*y + x;
+  VGA[offset] = 0xff;    
+  return 0;
+}
