@@ -171,9 +171,9 @@ void            uartintr(void);
 void            uartputc(int);
 
 // vga.c
-void            write_regs(unsigned char *regs);
 int             selec_mode(int mode);
 int             plotpixel(int x, int y, int color);
+int             plotrectangle(int x1, int y1, int x2, int y2, int color);
 
 // vm.c
 void            seginit(void);

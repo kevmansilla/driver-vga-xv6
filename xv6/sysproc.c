@@ -106,6 +106,14 @@ sys_plotpixel(void)
   if(argint(0, &a) < 0 || argint(1, &b) < 0 || argint(2, &c) < 0)
     return -1;
   return plotpixel(a, b, c);
+}
 
-
+int
+sys_plotrectangle(void)
+{
+  int x1, x2, y1, y2, color;
+  if((argint(0, &x1) < 0) || (argint(1, &y1) < 0) || (argint(2, &x2) < 0) || (argint(3, &y2) < 0) || (argint(4, &color) < 0)){
+    return -1;
+  }
+  return plotrectangle(x1, y1, x2, y2, color);
 }
