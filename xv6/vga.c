@@ -89,3 +89,18 @@ plotrectangle(int x1, int y1, int x2, int y2, int color)
   }
   return 0;
 }
+
+int plotcircle(int xm, int ym, int r, int color)
+{
+   int x = -r, y = 0, err = 2-2*r; /* II. Quadrant */
+   do {
+      plotpixel(xm-x, ym+y, color); /*   I. Quadrant */
+      plotpixel(xm-y, ym-x, color); /*  II. Quadrant */
+      plotpixel(xm+x, ym-y, color); /* III. Quadrant */
+      plotpixel(xm+y, ym+x, color); /*  IV. Quadrant */
+      r = err;
+      if (r <= y) err += ++y*2+1;           /* e_xy+e_y < 0 */
+      if (r > x || err > y) err += ++x*2+1; /* e_xy+e_x > 0 or no 2nd y-step */
+   } while (x < 0);
+   return 0;
+}

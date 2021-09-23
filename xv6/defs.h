@@ -174,6 +174,7 @@ void            uartputc(int);
 int             selec_mode(int mode);
 int             plotpixel(int x, int y, int color);
 int             plotrectangle(int x1, int y1, int x2, int y2, int color);
+int             plotcircle(int xm, int ym, int r, int color);
 
 // vm.c
 void            seginit(void);

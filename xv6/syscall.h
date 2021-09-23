@@ -23,3 +23,4 @@
 #define SYS_modeswitch  22
 #define SYS_plotpixel 23
 #define SYS_plotrectangle 24
+#define SYS_plotcircle 25

@@ -106,6 +106,7 @@ extern int sys_uptime(void);
 extern int sys_modeswitch(void);
 extern int sys_plotpixel(void);
 extern int sys_plotrectangle(void);
+extern int sys_plotcircle(void);
 
 
 static int (*syscalls[])(void) = {
@@ -133,6 +134,7 @@ static int (*syscalls[])(void) = {
 [SYS_modeswitch]   sys_modeswitch,
 [SYS_plotpixel] sys_plotpixel,
 [SYS_plotrectangle] sys_plotrectangle,
+[SYS_plotcircle] sys_plotcircle,
 };
 
 void

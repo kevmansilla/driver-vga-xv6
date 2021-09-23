@@ -117,3 +117,13 @@ sys_plotrectangle(void)
   }
   return plotrectangle(x1, y1, x2, y2, color);
 }
+
+int
+sys_plotcircle(void)
+{
+  int x1, x2, y1, color;
+  if((argint(0, &x1) < 0) || (argint(1, &y1) < 0) || (argint(2, &x2) < 0) || (argint(3, &color) < 0)){
+    return -1;
+  }
+  return plotcircle(x1, x2, y1, color);
+}
