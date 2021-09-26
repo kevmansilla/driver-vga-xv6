@@ -184,7 +184,7 @@ UPROGS=\
 	_sh\
 	_stressfs\
 	_usertests\
-#	_testplotcool\
+	_testplotcool\
 	_wc\
 	_zombie\
 
@@ -255,7 +255,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 
 EXTRA=\
 	mkfs.c bitmap.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
-	ln.c ls.c modeswitch.c mkdir.c rm.c stressfs.c usertests.c vga.c wc.c zombie.c\
+	ln.c ls.c modeswitch.c mkdir.c rm.c stressfs.c usertests.c vga.c wc.c zombie.c testplotcool.c\
 	printf.c umalloc.c\
 	$(BMP) \
 	README_xv6 dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\

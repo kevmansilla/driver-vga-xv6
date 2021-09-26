@@ -101,19 +101,42 @@ set_font(uchar font[FONT_SIZE])
   outb(VGA_GC_INDEX + 1, 0x0C);
 }
 
+void vgaSetPalette(int index, int r, int g, int b) {
+  outb(0x3C8, index);
+  outb(0x3C9, r); 
+  outb(0x3C9, g); 
+  outb(0x3C9, b); 
+}
+
+void setdefaultVGApalette() {
+  for(int index=0;index<256;index++) {
+    int value = vga_pal[index];
+    vgaSetPalette(index,
+               (value>>18)&0x3f,
+               (value>>10)&0x3f,
+               (value>>2)&0x3f);
+  }  
+}
+
 int
 selec_mode(int mode)
 {
   if(mode == INIT_VGA){
     write_regs(g_320x200x256);
-    uchar *VGA = (uchar *) P2V(0xA0000);
+    setdefaultVGApalette();
+    uchar *VGA_G = (uchar *) P2V(0xA0000);
     for (uint i = 0; i < 320*200; i++){
-      VGA[i] = 0x00;
+      VGA_G[i] = (char)0x00;
     }
     return 1;
+
   }else if (mode == INIT_TEX_MODE){
     write_regs(g_80x25_text);
     set_font(g_8x16_font);
+    uchar *VGA_T = (uchar *) P2V(0xB8000);
+    for (uint i = 0; i < 80*25; i++){
+      VGA_T[i] = (char)0x00;
+    }
     return 0;
   }
   return 0;
@@ -123,7 +146,7 @@ int
 plotpixel(int x, int y, int color)
 {
   uchar *VGA = (uchar *)P2V(0xA0000);
-  unsigned int offset = 320*y + x;
+  unsigned int offset = 320*y+x;
   VGA[offset] = color;
   return 0;
 }
