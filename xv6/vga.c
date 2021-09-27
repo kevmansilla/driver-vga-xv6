@@ -109,32 +109,36 @@ void vgaSetPalette(int index, int r, int g, int b) {
 }
 
 void setdefaultVGApalette() {
-  for(int index=0;index<256;index++) {
+  for (int index = 0; index < 256; index++)
+  {
     int value = vga_pal[index];
     vgaSetPalette(index,
-               (value>>18)&0x3f,
-               (value>>10)&0x3f,
-               (value>>2)&0x3f);
-  }  
+                  (value >> 18) & 0x3f,
+                  (value >> 10) & 0x3f,
+                  (value >> 2) & 0x3f);
+  }
 }
 
-int
-selec_mode(int mode)
+int selec_mode(int mode)
 {
-  if(mode == INIT_VGA){
+  if (mode == INIT_VGA)
+  {
     write_regs(g_320x200x256);
     setdefaultVGApalette();
-    uchar *VGA_G = (uchar *) P2V(0xA0000);
-    for (uint i = 0; i < 320*200; i++){
+    uchar *VGA_G = (uchar *)P2V(0xA0000);
+    for (uint i = 0; i < 320 * 200; i++)
+    {
       VGA_G[i] = (char)0x00;
     }
     return 1;
-
-  }else if (mode == INIT_TEX_MODE){
+  }
+  else if (mode == INIT_TEX_MODE)
+  {
     write_regs(g_80x25_text);
     set_font(g_8x16_font);
-    uchar *VGA_T = (uchar *) P2V(0xB8000);
-    for (uint i = 0; i < 80*25; i++){
+    uchar *VGA_T = (uchar *)P2V(0xB8000);
+    for (uint i = 0; i < 80 * 25; i++)
+    {
       VGA_T[i] = (char)0x00;
     }
     return 0;
@@ -154,30 +158,48 @@ plotpixel(int x, int y, int color)
 int
 plotrectangle(int x1, int y1, int x2, int y2, int color)
 {
-  for(int i = x1; i < x1 + x2; i++){
-    for(int j=y1; j < y1 + y2; j++){
-      plotpixel(i,j,color);
+  for (int i = x1; i < x1 + x2; i++)
+  {
+    for (int j = y1; j < y1 + y2; j++)
+    {
+      plotpixel(i, j, color);
     }
   }
   return 0;
 }
 
 int
-plotcircle(int xm, int ym, int r, int color)
+plotcircle(int x0, int y0, int radius, int color)
 {
-  int x = -r, y = 0, err = 2-2*r; /* II. Quadrant */
-  do{
-    plotpixel(xm-x, ym+y, color); /*   I. Quadrant */
-    plotpixel(xm-y, ym-x, color); /*  II. Quadrant */
-    plotpixel(xm+x, ym-y, color); /* III. Quadrant */
-    plotpixel(xm+y, ym+x, color); /*  IV. Quadrant */
-    r = err;
-    if(r <= y){
-      err += ++y*2+1; /* e_xy+e_y < 0 */
+  int x = radius;
+  int y = 0;
+  int xChange = 1 - (radius << 1);
+  int yChange = 0;
+  int radiusError = 0;
+
+  while (x >= y)
+  {
+    for (int i = x0 - x; i <= x0 + x; i++)
+    {
+      plotpixel(i, y0 + y, color);
+      plotpixel(i, y0 - y, color);
     }
-    if(r > x || err > y){
-      err += ++x*2+1; /* e_xy+e_x > 0 or no 2nd y-step */
+    for (int i = x0 - y; i <= x0 + y; i++)
+    {
+      plotpixel(i, y0 + x, color);
+      plotpixel(i, y0 - x, color);
     }
-   } while (x < 0);
-   return 0;
+
+    y++;
+    radiusError += yChange;
+    yChange += 2;
+    if (((radiusError << 1) + xChange) > 0)
+    {
+      x--;
+      radiusError += xChange;
+      xChange += 2;
+    }
+  }
+
+  return 0;
 }
