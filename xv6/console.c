@@ -286,17 +286,6 @@ consolewrite(struct inode *ip, char *buf, int n)
   return n;
 }
 
-static void
-vgainit()
-{
-  *(int *)P2V(0xB8F94) = 0x0353;
-  *(int *)P2V(0xB8F96) = 0x034F;
-  *(int *)P2V(0xB8F98) = 0x0332;
-  *(int *)P2V(0xB8F9A) = 0x0330;
-  *(int *)P2V(0xB8F9C) = 0x0332;
-  *(int *)P2V(0xB8F9E) = 0x0331;
-}
-
 void
 consoleinit(void)
 {

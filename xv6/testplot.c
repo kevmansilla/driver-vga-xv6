@@ -1,8 +1,9 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
+#include "vga.h"
 
-void
+static void
 plotsquare(int x, int y, int size, int color)
 {
   for (int i = 0; i < size; ++i)
@@ -107,7 +108,7 @@ plotmoon()
   return 0;
 }
 
-static int 
+static int
 rocket[] = {
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x0C,0x0C,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x0C,0x40,0x40,0x0C,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,
@@ -134,7 +135,7 @@ rocket[] = {
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x1A,0x1A,0x1A,0x1A,0x1A,0x1A,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,
 };
 
-static int 
+static int
 smoke[] = {
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x1E,0x1E,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x1E,0x1E,0x1E,0x1E,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,
@@ -146,7 +147,7 @@ smoke[] = {
   0x1E,0x1E,0x1F,0x1F,0x1F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x0F,0x1F,0x1F,0x1F,0x1E,0x1E
 };
 
-static int 
+static int
 linesmoke[] = {
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x1E,0x1F,0x1F,0x1E,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x1E,0x1F,0x1F,0x1E,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6
@@ -191,7 +192,38 @@ plotlinesmoke(int x, int y, int scale)
   return 0;
 }
 
-int letra_s[] = {
+static void
+clear(int x, int y, int color)
+{
+  for (uint i = 0; i <= 200; i++)
+  {
+    plotrectangle(0, x-i, y, 1, color);
+    sleep(5);
+  }
+}
+
+static int
+putletter(int x, int y, int scale, int letra[])
+{
+  for (int j = 0; j < 12; j++)
+  {
+    for (int i = 0; i < 10; i++)
+    {
+      plotsquare(x + (scale * i), y + (scale * j), scale, letra[10 * j + i]);
+    }
+  }
+  return 0;
+}
+
+void moveroket(){
+  for (uint i = 0; i < 30; i++)
+  {
+    plotrocket(200, 67-5*i, 3);
+    plotlinesmoke(200, 136-5*i, 3);
+  }
+}
+
+static int letra_s[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,0,0,0,68,68,68,0,
@@ -207,7 +239,7 @@ int letra_s[] = {
   0,0,67,67,67,67,67,67,0,0
 };
 
-int letra_o[] = {
+static int letra_o[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,68,68,68,68,68,68,68,
@@ -223,7 +255,7 @@ int letra_o[] = {
   0,0,68,68,68,68,86,68,0,0
 };
 
-int num_2[] = {
+static int num_2[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,68,68,68,68,68,68,68,
@@ -239,7 +271,7 @@ int num_2[] = {
   67,67,67,67,67,67,67,67,67,69,
 };
 
-int num_0[] = {
+static int num_0[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,68,68,68,68,68,68,68,
@@ -255,7 +287,7 @@ int num_0[] = {
   0,0,67,67,67,67,67,67,0,0
 };
 
-int num_1[] = {
+static int num_1[] = {
   0,0,0,67,67,67,0,0,0,0,
   0,67,67,67,67,67,0,0,0,0,
   68,68,68,68,68,68,0,0,0,0,
@@ -271,28 +303,9 @@ int num_1[] = {
   0,67,67,67,67,67,67,67,0,0
 };
 
-// static void
-// clear(int x, int y, int color)
-// {
-//   plotrectangle(0,0,x,y,color);
-// }
-
-static int
-putletter(int x, int y, int scale, int letra[])
-{
-  for (int j = 0; j < 12; j++)
-  {
-    for (int i = 0; i < 10; i++)
-    {
-      plotsquare(x + (scale * i), y + (scale * j), scale, letra[10 * j + i]);
-    }
-  }
-  return 0;
-}
-
 int main(void)
 {
-  modeswitch(1);
+  modeswitch(INIT_VGA);
 
   // Draw sky:
   plotsky();
@@ -314,17 +327,10 @@ int main(void)
 
   // Move rocket: (re-drawing)
   sleep(50);
-  for (uint i = 0; i < 30; i++){
-    plotrocket(200, 67-5*i, 3);
-    plotlinesmoke(200, 136-5*i, 3);
-  }
+  moveroket();
 
   // Final screen:
-  for (uint i = 0; i <= 200; i++)
-  {
-    plotrectangle(0, 200-i, 320, 1, 00);
-    sleep(5);
-  }
+  clear(200, 320, 00);
 
   //print message
   putletter(20,50,5,letra_s);
@@ -333,7 +339,6 @@ int main(void)
   putletter(160,50,5,num_0);
   putletter(210,50,5,num_2);
   putletter(250,50,5,num_1);
-
 
   exit();
 }
