@@ -41,9 +41,9 @@
 #define CHARSET_LENGTH              256
 #define FONT_SIZE CHARSET_LENGTH * BYTES_PER_GLYPTH
 
-/* Pallete  */
-#define PALETTE_INDEX       0x03c8
-#define PALETTE_DATA        0x03c9
+/* Standart VGA screen 320*200 */
+#define SCREEN_WIDTH        320
+#define SCREEN_HEIGHT       200
 
 /* Modo Grafico */
 uchar

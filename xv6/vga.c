@@ -4,25 +4,36 @@
 #include "vga.h"
 #include "memlayout.h"
 
+
+/* VGA init */
 void
 vgainit()
 {
-  *(int *)P2V(0xB8F94) = 0x0353;
-  *(int *)P2V(0xB8F96) = 0x034F;
-  *(int *)P2V(0xB8F98) = 0x0332;
-  *(int *)P2V(0xB8F9A) = 0x0330;
-  *(int *)P2V(0xB8F9C) = 0x0332;
-  *(int *)P2V(0xB8F9E) = 0x0331;
+  uchar a[] = "SO2021";
+  int length = sizeof(a);
+  ushort *VGA = (ushort *) P2V(0xB8F94);
+  for (int i = 0; i < length; i++){
+    VGA[i] = a[i] + ((i + 2) << 8);
+  }
 }
 
+/* clean screen */
 static void
-clear_screen(int x, int y)
+clear_screen(int x)
 {
-  uchar *VGA_G = (uchar *)P2V(0xA0000);
-  for (uint i = 0; i < x * y; i++)
-    VGA_G[i] = (char)0x00;
+  if (x == 1)
+  {
+    uchar *VGA_G = (uchar *)P2V(0xA0000);
+    for (uint i = 0; i < 320 * 200; i++)
+      VGA_G[i] = (char)0x00;
+  } else {
+    uchar *VGA_G = (uchar *)P2V(0xB8000);
+    for (uint i = 0; i < 320 * 200; i++)
+      VGA_G[i] = (char)0x00;
+  }
 }
 
+/* clean screen */
 static void
 vgaSetPalette(int index, int r, int g, int b)
 {
@@ -32,6 +43,7 @@ vgaSetPalette(int index, int r, int g, int b)
   outb(0x3C9, b);
 }
 
+/* palette VGA */
 static void
 setdefaultVGApalette()
 {
@@ -42,6 +54,7 @@ setdefaultVGApalette()
   }
 }
 
+/* syscalls */
 int
 plotpixel(int x, int y, int color)
 {
@@ -99,6 +112,7 @@ plotcircle(int x0, int y0, int radius, int color)
   return 0;
 }
 
+/* Register set up for mode switching */
 static void
 write_regs(unsigned char *regs)
 {
@@ -149,6 +163,7 @@ write_regs(unsigned char *regs)
   outb(VGA_AC_INDEX, 0x20);
 }
 
+/* Font recovery */
 static void
 set_font(uchar font[FONT_SIZE])
 {
@@ -198,6 +213,7 @@ set_font(uchar font[FONT_SIZE])
   outb(VGA_GC_INDEX + 1, 0x0C);
 }
 
+/* selec mode */
 int
 selec_mode(int mode)
 {
@@ -205,13 +221,13 @@ selec_mode(int mode)
   {
     write_regs(g_320x200x256);
     setdefaultVGApalette();
-    clear_screen(320,200);
+    clear_screen(1);
   }
   else if (mode == INIT_TEX_MODE)
   {
     write_regs(g_80x25_text);
     set_font(g_8x16_font);
-    clear_screen(80,25);
+    clear_screen(0);
     vgainit();
   }
   return 0;
