@@ -153,77 +153,8 @@ linesmoke[] = {
   0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0x1E,0x1F,0x1F,0x1E,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6,0xC6
 };
 
-static int
-plotrocket(int x, int y, int scale)
-{
-  for (int j = 0; j < 23; j++)
-  {
-    for (int i = 0; i < 24; i++)
-    {
-      plotsquare(x + (scale * i), y + (scale * j), scale, rocket[24 * j + i]);
-    }
-  }
-  return 0;
-}
-
-static int
-plotsmoke(int x, int y, int scale)
-{
-  for (int j = 0; j < 8; j++)
-  {
-    for (int i = 0; i < 24; i++)
-    {
-      plotsquare(x + (scale * i), y + (scale * j), scale, smoke[24 * j + i]);
-    }
-  }
-  return 0;
-}
-
-static int
-plotlinesmoke(int x, int y, int scale)
-{
-  for (int j = 0; j < 2; j++)
-  {
-    for (int i = 0; i < 24; i++)
-    {
-      plotsquare(x + (scale * i), y + (scale * j), scale, linesmoke[24 * j + i]);
-    }
-  }
-  return 0;
-}
-
-static void
-clear(int x, int y, int color)
-{
-  for (uint i = 0; i <= 200; i++)
-  {
-    plotrectangle(0, x-i, y, 1, color);
-    sleep(5);
-  }
-}
-
-static int
-putletter(int x, int y, int scale, int letra[])
-{
-  for (int j = 0; j < 12; j++)
-  {
-    for (int i = 0; i < 10; i++)
-    {
-      plotsquare(x + (scale * i), y + (scale * j), scale, letra[10 * j + i]);
-    }
-  }
-  return 0;
-}
-
-void moveroket(){
-  for (uint i = 0; i < 30; i++)
-  {
-    plotrocket(200, 67-5*i, 3);
-    plotlinesmoke(200, 136-5*i, 3);
-  }
-}
-
-static int letra_s[] = {
+static int 
+letra_s[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,0,0,0,68,68,68,0,
@@ -239,7 +170,8 @@ static int letra_s[] = {
   0,0,67,67,67,67,67,67,0,0
 };
 
-static int letra_o[] = {
+static int 
+letra_o[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,68,68,68,68,68,68,68,
@@ -255,7 +187,8 @@ static int letra_o[] = {
   0,0,68,68,68,68,86,68,0,0
 };
 
-static int num_2[] = {
+static int 
+num_2[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,68,68,68,68,68,68,68,
@@ -271,7 +204,8 @@ static int num_2[] = {
   67,67,67,67,67,67,67,67,67,69,
 };
 
-static int num_0[] = {
+static int 
+num_0[] = {
   0,0,67,67,67,67,67,67,0,0,
   0,67,67,67,67,67,67,67,67,0,
   68,68,68,68,68,68,68,68,68,68,
@@ -287,7 +221,8 @@ static int num_0[] = {
   0,0,67,67,67,67,67,67,0,0
 };
 
-static int num_1[] = {
+static int 
+num_1[] = {
   0,0,0,67,67,67,0,0,0,0,
   0,67,67,67,67,67,0,0,0,0,
   68,68,68,68,68,68,0,0,0,0,
@@ -302,6 +237,39 @@ static int num_1[] = {
   0,69,69,69,69,69,69,69,0,0,
   0,67,67,67,67,67,67,67,0,0
 };
+
+
+static int 
+plotgeneral(int x, int y, int scale, int * figure, int widthF, int heightF)
+{
+  for (int j = 0; j < heightF; j++)
+  {
+    for (int i = 0; i < widthF; i++)
+    {
+      plotsquare(x + (scale * i), y + (scale * j), scale, figure[widthF * j + i]);
+    }
+  }
+  return 0;
+}
+
+static void
+clear(int x, int y, int color)
+{
+  for (uint i = 0; i <= 200; i++)
+  {
+    plotrectangle(0, x-i, y, 1, color);
+    sleep(5);
+  }
+}
+
+void moveroket(){
+  for (uint i = 0; i < 30; i++)
+  {
+    plotgeneral(200, 67-5*i, 3, rocket, 24, 23);
+    plotgeneral(200, 136-5*i, 3, linesmoke, 24, 2);
+  }
+}
+
 
 int main(void)
 {
@@ -320,10 +288,10 @@ int main(void)
   plotmoon();
 
   // Draw rocket
-  plotrocket(200, 67, 3);
+  plotgeneral(200, 67, 3, rocket, 24, 23);
 
   // Draw smoke
-  plotsmoke(200, 136, 3);
+  plotgeneral(200, 136, 3, smoke, 24, 8);
 
   // Move rocket: (re-drawing)
   sleep(50);
@@ -333,12 +301,12 @@ int main(void)
   clear(200, 320, 00);
 
   //print message
-  putletter(20,50,5,letra_s);
-  putletter(60,50,5,letra_o);
-  putletter(110,50,5,num_2);
-  putletter(160,50,5,num_0);
-  putletter(210,50,5,num_2);
-  putletter(250,50,5,num_1);
+  plotgeneral(20, 50, 5, letra_s, 10, 12);
+  plotgeneral(60, 50, 5, letra_o, 10, 12);
+  plotgeneral(110, 50, 5, num_2, 10, 12);
+  plotgeneral(160, 50, 5, num_0, 10, 12);
+  plotgeneral(210, 50, 5, num_2, 10, 12);
+  plotgeneral(250, 50, 5, num_1, 10, 12);
 
   exit();
 }
