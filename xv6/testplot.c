@@ -132,9 +132,10 @@ clear(int x, int y, int color)
   }
 }
 
-static void 
+static void
 moveroket()
 {
+  sleep(50);
   for (uint i = 0; i < 30; i++)
   {
     plotgeneral(200, 67 - 5 * i, 3, rocket, 24, 23);
@@ -142,8 +143,16 @@ moveroket()
   }
 }
 
+static void movinput(char* input){
+  gets(input,2);
+  moveroket();
+}
+
 int main(void)
 {
+  char a[1];
+
+  // Init vga
   modeswitch(INIT_VGA);
 
   // Draw sky:
@@ -165,8 +174,7 @@ int main(void)
   plotgeneral(200, 136, 3, smoke, 24, 8);
 
   // Move rocket: (re-drawing)
-  sleep(50);
-  moveroket();
+  movinput(a);
 
   // Final screen:
   clear(200, 320, 00);

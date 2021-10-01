@@ -24,16 +24,16 @@ clear_screen(int x)
   if (x == 1)
   {
     uchar *VGA_G = (uchar *)P2V(0xA0000);
-    for (uint i = 0; i < 320 * 200; i++)
+    for (uint i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++)
       VGA_G[i] = (char)0x00;
   } else {
     uchar *VGA_G = (uchar *)P2V(0xB8000);
-    for (uint i = 0; i < 320 * 200; i++)
+    for (uint i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++)
       VGA_G[i] = (char)0x00;
   }
 }
 
-/* clean screen */
+/* palette VGA */
 static void
 vgaSetPalette(int index, int r, int g, int b)
 {
@@ -43,7 +43,6 @@ vgaSetPalette(int index, int r, int g, int b)
   outb(0x3C9, b);
 }
 
-/* palette VGA */
 static void
 setdefaultVGApalette()
 {
@@ -59,7 +58,7 @@ int
 plotpixel(int x, int y, int color)
 {
   uchar *VGA = (uchar *)P2V(0xA0000);
-  unsigned int offset = 320*y+x;
+  unsigned int offset = SCREEN_WIDTH*y+x;
   VGA[offset] = color;
   return 0;
 }
@@ -170,7 +169,8 @@ set_font(uchar font[FONT_SIZE])
   uint i = 0u;
   uint j = 0u;
   uchar *p = (uchar *) P2V(0xB8000);
-  uchar mem_mode, graphics_mode;
+  uchar mem_mode = 0x00;
+  uchar graphics_mode = 0x00;
 
   /* Panel 2 write enable */
   outb(VGA_SEQ_INDEX, VGA_SEQ_MAP_MASK_REG);
@@ -221,13 +221,13 @@ selec_mode(int mode)
   {
     write_regs(g_320x200x256);
     setdefaultVGApalette();
-    clear_screen(1);
+    clear_screen(INIT_VGA);
   }
   else if (mode == INIT_TEX_MODE)
   {
     write_regs(g_80x25_text);
     set_font(g_8x16_font);
-    clear_screen(0);
+    clear_screen(INIT_TEX_MODE);
     vgainit();
   }
   return 0;
